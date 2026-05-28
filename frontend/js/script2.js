@@ -1,4 +1,4 @@
- // Elements
+// Elements
         const resumeFile = document.getElementById('resumeFile');
         const resumeLabel = document.getElementById('resumeLabel');
         const jdFile = document.getElementById('jdFile');
