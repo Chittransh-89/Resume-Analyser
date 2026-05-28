@@ -1,136 +1,105 @@
 # 🚀 Resume Analyzer
 
-> A smart Resume Analyzer that extracts, evaluates, and scores resumes — evolving from a rule-based system to an ML-powered product.
+A lightweight Resume Analyzer that extracts text from PDF resumes and evaluates them using a rule-based scoring system to generate structured feedback and improvement suggestions.
 
 ---
 
 ## 📌 Overview
 
-This project analyzes resumes (PDF format) and provides:
-- 📊 Resume Score
-- ⚠️ Improvement Warnings
-- 🧠 (Upcoming) AI-based Resume Matching
-
-Built step-by-step to transition from a **basic script → intelligent system → deployable product**.
+Resume Analyzer processes resumes and provides:
+- Resume Score
+- Missing skill detection
+- Section-wise basic evaluation
+- Improvement warnings
 
 ---
 
-## ✨ Features
+## ⚙️ Features
 
-### 🔹 Phase 1 — Resume Parsing
-- Extract text from PDF resumes
-- Process raw resume content
-- Display extracted data
+### 📄 Resume Parsing
+- Extracts text from PDF resumes
+- Converts resume into readable structured text
 
-### 🔹 Phase 2 — Rule-Based Analysis
-- Keyword-based evaluation
-- Resume scoring system
-- Smart warnings:
-  - Missing skills
-  - Weak sections
-  - No projects
+### 🧠 Rule-Based Analysis
+- Keyword-based scoring system
+- Basic evaluation of:
+  - Skills
+  - Experience
+  - Projects
+
+### ⚠️ Feedback System
+- Missing skills detection
+- Weak section identification
+- Simple improvement warnings
 
 ---
 
 ## 📊 Sample Output
-Score: 65%
+Score: 70%
 
 Warnings:
+
 No projects mentioned
-Missing key skills (React, APIs)
+Missing key skills: React, APIs
 Weak experience section
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** FastAPI
-- **Language:** Python
-- **Libraries:** PyPDF / PDF parsing tools
-- **Logic:** Rule-based text processing
+- Python
+- FastAPI
+- PDF parsing library (pdfplumber / PyPDF)
+- Basic NLP (string processing & keyword matching)
 
 ---
 
 ## 📁 Project Structure
-resume-analyzer/src
+resume-analyzer/
 │
-├── main.py # FastAPI app
-├── parser.py # Resume extraction
-├── analyzer.py # Scoring logic
-├── utils.py # Helper functions
-└── sample_resume.pdf # Test file
+├── backend/
+│   ├── main.py
+│   ├── functions.py
+│   ├── requirements.txt
+│
+├── frontend/
+│   ├── index.html
+│   ├── compare.html
+│   ├── css/
+│   │    ├── index.css
+│   │    ├── index2.css
+│   ├── js/
+│   │    ├── script.js
+│   │    ├── script2.js
+│
+└── README.md
+
 
 ---
 
-## ⚙️ Setup & Run
+## 🚀 How to Run
 
-### 1️⃣ Clone Repository
-
+### 1. Clone repository
 git clone https://github.com/Chittransh-89/Resume-Analyzer.git
 cd resume-analyzer
 
 
-### 2️⃣ Install Dependencies
+### 2. Install dependencies
 
 pip install -r requirements.txt
 
 
-### 3️⃣ Run Server
+### 3. Start server
 
 uvicorn main:app --reload
 
-### 4️⃣ Test API
-- Upload a resume (PDF)
-- Get score + warnings in response
 
----
-
-## 🧠 Upcoming Features
-
-### 🔹 Phase 3 — ML / NLP
-- TF-IDF Vectorization
-- Cosine Similarity
-- Resume vs Job Description matching
-
-### 🔹 Phase 4 — Smart Analysis
-- Section-wise scoring
-- Advanced keyword extraction
-- Personalized suggestions
-
-### 🔹 Phase 5 — Frontend
-- Resume upload UI
-- Score visualization dashboard
-
-### 🔹 Phase 6 — Deployment
-- Cloud deployment (Render / AWS)
-- Multi-user support
-- Production-ready API
-
----
-
-## 🎯 Vision
-
-Transform this project into a **real-world product** that helps users improve their resumes using data and AI.
-
----
-
-## ⚠️ Important Note
-
-This is not just a basic project.  
-The real value comes from:
-- Completing ML integration
-- Adding frontend
-- Deploying it live
-- Explaining it clearly
+### 4. Use
+- Upload a PDF resume
+- Get score and feedback
 
 ---
 
 ## 👨‍💻 Author
 
 **Chittransh Verma**
-
----
-
-## ⭐ Support
-
-If you found this useful, consider giving it a ⭐ on GitHub.
