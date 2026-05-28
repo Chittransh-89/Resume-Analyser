@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer AI - Compare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="index2.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <div class="logo">Resume Analyzer AI</div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Analysis</a>
+                <a href="compare.html" class="nav-link active">Compare</a>
+            </div>
+        </nav>
+
+        <header>
+            <h1>Resume vs Job Description</h1>
+            <p class="subtitle">Compare your resume against job requirements</p>
+        </header>
+
+        <div class="main-card">
+            <div class="upload-section">
+                <div class="error-message" id="errorMessage"></div>
+
+                <div class="upload-grid">
+                    <div class="input-group">
+                        <label for="resumeFile">Upload Resume</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="resumeFile" accept=".pdf">
+                            <label for="resumeFile" class="file-input-label" id="resumeLabel">
+                                📄 Choose Resume PDF
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="jdFile">Upload Job Description</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="jdFile" accept=".pdf">
+                            <label for="jdFile" class="file-input-label" id="jdLabel">
+                                📄 Choose JD PDF
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="compare-btn" id="compareBtn">Compare</button>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div id="resultsContent"></div>
+            </div>
+
+            <div class="empty-state" id="emptyState">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                <h3>No Comparison Yet</h3>
+                <p>Upload both files to compare your resume with the job description</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script2.js"></script>
+</body>
+</html>
