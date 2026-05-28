@@ -1,8 +1,17 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from functions import(analyze_resume as analyze_resume_logic, calculate_similarity, extract_text_from_pdf, extract_skills, skill_gap,normalize_skills)
 import pdfplumber
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+
+# IMPORTANT: allow frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 🔹 Upload + Analyze Resume
 @app.post("/upload/")
@@ -22,9 +31,8 @@ async def upload(file: UploadFile = File(...)):
 # 🔹 Resume vs JD Matching
 @app.post("/analyze/")
 async def analyze_route(
-    file: UploadFile = File(...),
-    jd: UploadFile = File(...)
-):
+    file: UploadFile = File(...),jd: UploadFile = File(...)):
+    
     # Read files
     content = await file.read()
     jd_content = await jd.read()
