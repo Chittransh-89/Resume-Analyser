@@ -1,71 +1,55 @@
-
-from pydoc import text
-import warnings
-
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, File, Form
+from functions import(analyze_resume as analyze_resume_logic, calculate_similarity, extract_text_from_pdf, extract_skills, skill_gap,normalize_skills)
 import pdfplumber
 
 app = FastAPI()
-filename = "resume2.pdf"
+
+# 🔹 Upload + Analyze Resume
 @app.post("/upload/")
-async def upload(file: UploadFile):
-    print("Received file:", file.filename)
+async def upload(file: UploadFile = File(...)):
+    content = await file.read()
 
-    with open(filename, "wb") as f:
-        content = await file.read()
-        print("File size:", len(content))
-        f.write(content)
+    text = extract_text_from_pdf(content)
+    score, warnings_list, found_skills = analyze_resume_logic(text)
 
-    text = ""
-    with pdfplumber.open(filename) as pdf:
-        print("Total pages:", len(pdf.pages))
-
-        for i, page in enumerate(pdf.pages):
-            extracted = page.extract_text()
-            print(f"Page {i} text:", extracted)
-
-            if extracted:
-                text += extracted
-    
-    score, warnings_list, found_skills = analyze_resume(text)           
-
-        
     return {
-        "filename": file.filename, 
-        "text": text, 
-        "score": score, 
+        "filename": file.filename,
+        "score": score,
         "warnings": warnings_list,
         "skills_found": found_skills
     }
 
-def analyze_resume(text):
-    text = text.lower()
-    score = 0
-    warnings_list = []
-    found_skills = []
+# 🔹 Resume vs JD Matching
+@app.post("/analyze/")
+async def analyze_route(
+    file: UploadFile = File(...),
+    jd: UploadFile = File(...)
+):
+    # Read files
+    content = await file.read()
+    jd_content = await jd.read()
 
-    skills_list = ["python", "java", "c++", "react", "node", "machine learning"]
+    # Extract text
+    resume_text = extract_text_from_pdf(content)
+    jd_text = extract_text_from_pdf(jd_content)
 
-    for skill in skills_list:
-        if skill in text:
-            found_skills.append(skill)
-            score += 5
+    # Similarity (BERT)
+    score = calculate_similarity(resume_text, jd_text)
 
-    if "projects" in text:
-        score += 20
-    else:
-        warnings_list.append("Add projects section")
+    # Extract skills using spaCy
+    resume_skills_raw = extract_skills(resume_text)
+    jd_skills_raw = extract_skills(jd_text)
 
-    if "skills" in text:
-        score += 10
-    else:
-        warnings_list.append("Add skills section")
+    # Normalize skills
+    resume_skills = normalize_skills(resume_skills_raw)
+    jd_skills = normalize_skills(jd_skills_raw)
 
-    if "experience" in text or "intern" in text:
-        score += 20
-    else:
-        warnings_list.append("Add experience section")
-    if score > 100:
-        score = 100
+    # Skill gap
+    missing_skills = list(set(jd_skills) - set(resume_skills))
 
-    return score, warnings_list, found_skills
+    return {
+        "match_score": f"{score:.2f}%",
+        "skills_in_resume": resume_skills,
+        "skills_required": jd_skills,
+        "missing_skills": missing_skills
+    }
