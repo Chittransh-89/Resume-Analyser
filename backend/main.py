@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
-from functions import (
+from backend.functions import (
     analyze_resume as analyze_resume_logic,
     calculate_similarity,
     extract_text_from_pdf,
