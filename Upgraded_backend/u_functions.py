@@ -13,6 +13,81 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 
 # ✅
+def classify_document(text):
+    prompt = f"""You are an advanced ATS system.
+
+Your task is to classify the given document into one of the following categories:
+- RESUME
+- NOTES
+- JOB_DESCRIPTION
+- OTHER
+
+JOB ROLES (choose ONE):
+DATA_SCIENTIST
+DATA_ANALYST
+ML_ENGINEER
+AI_ENGINEER
+FRONTEND_DEVELOPER
+BACKEND_DEVELOPER
+FULLSTACK_DEVELOPER
+SOFTWARE_ENGINEER
+
+STRICT RULES:
+
+RESUME:
+- Personal work experience
+- Projects
+- Skills section
+- Education
+
+JOB_DESCRIPTION:
+- Hiring intent
+- Required skills
+- Responsibilities
+- Company language
+
+NOTES:
+- Theory
+- Study material
+- No hiring or personal career context
+
+If unsure → classify as NOTES.
+If no dominant specialization → SOFTWARE_ENGINEER.
+
+Return ONLY valid JSON:
+
+{{
+  "type": "RESUME or NOTES or JOB_DESCRIPTION or OTHER",
+  "job_role": "ROLE_NAME",
+  "confidence": number
+}}
+
+Document:
+{text[:1500]}
+"""
+
+    response = groq_client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.05
+    )
+
+    result = response.choices[0].message.content.strip()
+
+    start = result.find("{")
+    end = result.rfind("}") + 1
+    clean_json = result[start:end]
+
+    try:
+        data = json.loads(clean_json)
+        return {
+            "type": data.get("type", "OTHER"),
+            "job_role": data.get("job_role", "UNKNOWN"),
+            "confidence": data.get("confidence", 0)
+        }
+    except:
+        return {"type": "OTHER", "job_role": "UNKNOWN", "confidence": 0}
+# ✅
 def classify_both_documents(resume_text, jd_text):
     prompt = f"""
 You are an advanced ATS system.
