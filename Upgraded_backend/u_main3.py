@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from u_functions import (
     analyze_resume as analyze_resume_logic,
     classify_both_documents,
+    classify_document,
     extract_bullets_from_text,
     extract_skills_llm,
     extract_text_from_pdf,
@@ -29,6 +30,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("/classify/")
+async def classify_route(
+    file: UploadFile = File(...),
+):
+    content = await file.read()
+    resume_text = extract_text_from_pdf(content)
+
+    # Single call — no duplicate
+    classification = classify_document(resume_text)
+
+    doc_type = classification.get("type", "OTHER")
+    job_role = classification.get("job_role", "UNKNOWN")
+    confidence = classification.get("confidence", 0)
+
+    # is_resume ko type se check karo — document_a se nahi
+    is_resume = doc_type == "RESUME"
+
+    return {
+        "validation": {
+            "type": doc_type,
+            "confidence": confidence,
+            "job_role": job_role,
+            "resume": is_resume
+        }
+    }
 
 # 🔥 🔹 STRONG Resume vs JD Matching (LLM + Semantic)
 @app.post("/analyze/")
